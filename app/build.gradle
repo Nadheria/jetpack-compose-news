@@ -6,13 +6,13 @@ plugins {
 }
 
 android {
-    namespace 'com.nadharia.quotes'
+    namespace 'com.example.news_compse'
     compileSdk 35
 
     defaultConfig {
-        applicationId "com.nadharia.quotes"
+        applicationId "com.example.news_compse"
         minSdk 24
-        targetSdk 35
+        targetSdk 34
         versionCode 1
         versionName "1.0"
 
@@ -43,7 +43,7 @@ android {
     }
     packaging {
         resources {
-            excludes += '/META-INF/{AL2.0,LGPL2.1}'
+             excludes += '/META-INF/{AL2.0,LGPL2.1}'
         }
     }
 }
@@ -58,6 +58,7 @@ dependencies {
     implementation libs.androidx.ui.graphics
     implementation libs.androidx.ui.tooling.preview
     implementation libs.androidx.material3
+    implementation libs.androidx.navigation.compose
     testImplementation libs.junit
     androidTestImplementation libs.androidx.junit
     androidTestImplementation libs.androidx.espresso.core
@@ -78,25 +79,20 @@ dependencies {
     implementation(libs.gson)
 
 
+    implementation (libs.androidx.lifecycle.viewmodel.ktx)
     implementation (libs.androidx.lifecycle.runtime.ktx.v261)
     implementation (libs.kotlinx.coroutines.android)
 
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.7")
+    implementation libs.androidx.navigation.compose.v270rc01
+    implementation("androidx.compose.material:material:1.7.6") // Use the latest version
+    implementation("androidx.compose.ui:ui:1.5.1")
+    implementation("androidx.compose.ui:ui-tooling-preview:1.5.1")
+    implementation("androidx.navigation:navigation-compose:2.7.3")
 
-    implementation("androidx.activity:activity-ktx:1.9.3")
-    implementation("androidx.fragment:fragment-ktx:1.8.4")
-
-    // For ViewModel
-    implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.7")
-
-// For Compose ViewModel support
-    implementation ("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")
-
-    implementation ("androidx.hilt:hilt-navigation-compose:1.2.0")
-
-    implementation ("androidx.navigation:navigation-compose:2.8.4")
-
-    implementation ("androidx.navigation:navigation-compose:2.8.4")
-
+    implementation "com.google.accompanist:accompanist-pager:0.25.0"
+    implementation "com.google.accompanist:accompanist-pager-indicators:0.25.0"
+    //Dagger
+    implementation("androidx.hilt:hilt-common:1.1.0")
+    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
 }
 
