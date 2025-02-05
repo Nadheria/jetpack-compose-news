@@ -1,28 +1,52 @@
 package com.nadharia.news_compose.viewmodels
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.khush.newsapp.common.dispatcher.DispatcherProvider
+import com.khush.newsapp.common.networkhelper.NetworkHelper
+import com.nadharia.news_compose.common.NoInternetException
+import com.nadharia.news_compose.base.UIState
 import com.nadharia.news_compose.data.network.NewsRepo
-import com.nadharia.news_compose.model.RecentListItem
+import com.nadharia.news_compose.model.NewsType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class NewsFilterViewModel @Inject constructor(
     private val newsRepository: NewsRepo,
+    private val dispatcherProvider: DispatcherProvider,
+    private val networkHelper: NetworkHelper
 ) :
     ViewModel() {
-    private val _recentList = MutableStateFlow(
-        listOf(
-            RecentListItem(1, "Blue-tailed Bee-eater", "Lorem ipsum", isFav = true, isSaved = true),
-            RecentListItem(2, "Indian Peafowl", "Lorem ipsum", isSaved = true),
-            RecentListItem(3, "Brahminy Starling", "Lorem ipsum", isFav = true),
-            RecentListItem(4, "Chestnut-headed Bee-eater", "Lorem ipsum"),
-            RecentListItem(5, "Changeable Hawk-eagle", "Lorem ipsum", isSaved = true),
-        )
-    )
+    private val _newsTypeItem = MutableStateFlow<UIState<List<NewsType>>>(UIState.Empty)
+    val newsTypeItem: StateFlow<UIState<List<NewsType>>> = _newsTypeItem
 
-    val recentList: StateFlow<List<RecentListItem>> = _recentList
+
+    fun getNewsType() {
+        viewModelScope.launch {
+            if (!networkHelper.isNetworkConnected()) {
+                _newsTypeItem.emit(
+                    UIState.Failure(
+                        throwable = NoInternetException()
+                    )
+                )
+                return@launch
+            }
+            _newsTypeItem.emit(UIState.Loading)
+            newsRepository.getCountries()
+                .flowOn(dispatcherProvider.io)
+                .catch {
+                    _newsTypeItem.emit(UIState.Failure(it))
+                }
+                .collect {
+                    _newsTypeItem.emit(UIState.Success(it))
+                }
+        }
+    }
 }
 

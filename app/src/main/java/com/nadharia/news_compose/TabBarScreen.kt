@@ -2,7 +2,6 @@ package com.nadharia.news_compose
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
-
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.MoreVert
@@ -19,7 +18,6 @@ import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
 import com.nadharia.news_compose.ui.components.TabScreen
 import com.nadharia.news_compose.viewmodels.NewsFilterViewModel
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 
 
@@ -29,7 +27,9 @@ fun TabBarScreen(viewModel: NewsFilterViewModel = hiltViewModel()) {
     val tabs = listOf(TabScreen.Categories, TabScreen.Source)
     val pagerState = rememberPagerState()
     val coroutineScope = rememberCoroutineScope()
-    val recentList by viewModel.recentList.collectAsState()
+    val newsCategoryList by viewModel.newsTypeItem.collectAsState()
+
+
 
     Scaffold(
         topBar = {
@@ -45,7 +45,11 @@ fun TabBarScreen(viewModel: NewsFilterViewModel = hiltViewModel()) {
                 elevation = 0.dp,
                 actions = {
                     IconButton(onClick = { /* TODO */ }) {
-                        Icon(Icons.Filled.MoreVert, contentDescription = "Pop up", tint = Color.White)
+                        Icon(
+                            Icons.Filled.MoreVert,
+                            contentDescription = "Pop up",
+                            tint = Color.White
+                        )
                     }
                 }
             )
@@ -55,7 +59,12 @@ fun TabBarScreen(viewModel: NewsFilterViewModel = hiltViewModel()) {
             TabRow(
                 selectedTabIndex = pagerState.currentPage,
                 indicator = { tabPositions ->
-                    TabRowDefaults.Indicator(Modifier.pagerTabIndicatorOffset(pagerState, tabPositions))
+                    TabRowDefaults.Indicator(
+                        Modifier.pagerTabIndicatorOffset(
+                            pagerState,
+                            tabPositions
+                        )
+                    )
                 }
             ) {
                 tabs.forEachIndexed { index, item ->
@@ -74,8 +83,8 @@ fun TabBarScreen(viewModel: NewsFilterViewModel = hiltViewModel()) {
                 modifier = Modifier.padding(top = 10.dp)
             ) { page ->
                 when (tabs[page]) {
-                    TabScreen.Categories -> ListTabContent(recentList) { true }
-                    TabScreen.Source -> ListTabContent(recentList) { it.isFav }
+                    TabScreen.Categories -> ListTabContent(newsCategoryList) { true }
+                    TabScreen.Source -> ListTabContent(newsCategoryList) { it.isFav }
                 }
             }
         }

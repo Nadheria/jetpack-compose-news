@@ -59,14 +59,13 @@ object RetrofitModule {
 
     @Singleton
     @Provides
-    fun provideHttpClient(networkConnectionInterceptor: NetworkConnectionInterceptor): OkHttpClient {
+    fun provideHttpClient(): OkHttpClient {
         val loggingInterceptor = HttpLoggingInterceptor()
         loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
         return OkHttpClient.Builder()
             .readTimeout(10, TimeUnit.SECONDS)
             .connectTimeout(10, TimeUnit.SECONDS)
             .addInterceptor(loggingInterceptor)
-            .addInterceptor(networkConnectionInterceptor)
             .build()
     }
 }

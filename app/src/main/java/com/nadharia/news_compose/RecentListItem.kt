@@ -1,9 +1,11 @@
 package com.nadharia.news_compose
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.IconButton
@@ -17,15 +19,18 @@ import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.nadharia.news_compose.model.RecentListItem
+import com.nadharia.news_compose.model.NewsType
 
 @Composable
-fun RecentList(item: RecentListItem) {
+fun RecentList(item: NewsType) {
     Card(
         modifier = Modifier.padding(10.dp),
         shape = RoundedCornerShape(10.dp),
@@ -37,6 +42,14 @@ fun RecentList(item: RecentListItem) {
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
+            Image(
+                painter = painterResource(id = item.image),
+                contentDescription = "Image",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .size(60.dp)
+                    .clip(RoundedCornerShape(size = 10.dp))
+            )
             Column(
                 modifier = Modifier
                     .padding(horizontal = 15.dp)
@@ -51,24 +64,24 @@ fun RecentList(item: RecentListItem) {
                     )
                 )
                 Text(
-                    text = item.subtitle,
+                    text = item.subTitle,
                     style = TextStyle(color = Color(0xFF5c5c5c))
                 )
             }
-            IconButton(onClick = {}) {
-                Icon(
-                    imageVector = if (item.isFav) Icons.Outlined.Favorite else Icons.Outlined.FavoriteBorder,
-                    contentDescription = "",
-                    tint = Color(0xFFE93224)
-                )
-            }
-            IconButton(onClick = {}) {
-                Icon(
-                    imageVector = if (item.isSaved) Icons.Outlined.DownloadDone else Icons.Filled.Download,
-                    contentDescription = "",
-                    tint = Color(0xFF757474)
-                )
-            }
+//            IconButton(onClick = {}) {
+//                Icon(
+//                    imageVector = if (item.isFav) Icons.Outlined.Favorite else Icons.Outlined.FavoriteBorder,
+//                    contentDescription = "",
+//                    tint = Color(0xFFE93224)
+//                )
+//            }
+//            IconButton(onClick = {}) {
+//                Icon(
+//                    imageVector = if (item.isSaved) Icons.Outlined.DownloadDone else Icons.Filled.Download,
+//                    contentDescription = "",
+//                    tint = Color(0xFF757474)
+//                )
+//            }
         }
     }
 }
