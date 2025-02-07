@@ -1,4 +1,4 @@
-package com.khush.newsapp.common.dispatcher
+package com.nadharia.news_compose.common.dispatcher
 
 import kotlinx.coroutines.CoroutineDispatcher
 

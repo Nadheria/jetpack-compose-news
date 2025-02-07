@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
+import com.nadharia.news_compose.common.networkhelper.NetworkHelper
 
 class NetworkHelperImpl(
     private val context: Context

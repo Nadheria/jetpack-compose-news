@@ -8,14 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
-import androidx.compose.material.IconButton
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Download
-import androidx.compose.material.icons.outlined.DownloadDone
-import androidx.compose.material.icons.outlined.Favorite
-import androidx.compose.material.icons.outlined.FavoriteBorder
-import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -65,23 +58,12 @@ fun RecentList(item: NewsType) {
                 )
                 Text(
                     text = item.subTitle,
-                    style = TextStyle(color = Color(0xFF5c5c5c))
+                    style = TextStyle(
+                        color = Color(0xFF5c5c5c),
+                    )
                 )
+
             }
-//            IconButton(onClick = {}) {
-//                Icon(
-//                    imageVector = if (item.isFav) Icons.Outlined.Favorite else Icons.Outlined.FavoriteBorder,
-//                    contentDescription = "",
-//                    tint = Color(0xFFE93224)
-//                )
-//            }
-//            IconButton(onClick = {}) {
-//                Icon(
-//                    imageVector = if (item.isSaved) Icons.Outlined.DownloadDone else Icons.Filled.Download,
-//                    contentDescription = "",
-//                    tint = Color(0xFF757474)
-//                )
-//            }
         }
     }
 }

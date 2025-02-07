@@ -13,6 +13,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.news_compse.R
+import java.util.Locale
 
 @Composable
 fun BottomNavigationBar(navController: NavHostController) {
@@ -37,7 +38,7 @@ fun BottomNavigationBar(navController: NavHostController) {
                 },
                 label = {
                     Text(
-                        text = screen.capitalize(),
+                        text = screen.capitalize(Locale.ROOT),
                         style = MaterialTheme.typography.caption // Default text style
                     )
                 },

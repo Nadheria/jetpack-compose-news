@@ -1,10 +1,16 @@
 package com.nadharia.news_compose.di
 
+import android.content.Context
+import com.khush.newsapp.common.dispatcher.DefaultDispatcherProvider
+import com.khush.newsapp.common.networkhelper.NetworkHelperImpl
 import com.nadharia.news_compose.Constants
+import com.nadharia.news_compose.common.dispatcher.DispatcherProvider
+import com.nadharia.news_compose.common.networkhelper.NetworkHelper
 import com.nadharia.news_compose.data.network.APIService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -68,5 +74,18 @@ object RetrofitModule {
             .addInterceptor(loggingInterceptor)
             .build()
     }
+
+    @Provides
+    @Singleton
+    fun provideDispatcher(): DispatcherProvider = DefaultDispatcherProvider()
+
+    @Provides
+    @Singleton
+    fun provideNetworkHelper(
+        @ApplicationContext context: Context
+    ): NetworkHelper {
+        return NetworkHelperImpl(context)
+    }
+
 }
 

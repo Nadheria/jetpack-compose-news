@@ -1,5 +1,6 @@
 package com.khush.newsapp.common.dispatcher
 
+import com.nadharia.news_compose.common.dispatcher.DispatcherProvider
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 

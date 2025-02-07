@@ -9,13 +9,19 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.news_compse.R
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
+import com.nadharia.news_compose.base.ShowError
+import com.nadharia.news_compose.base.UIState
+import com.nadharia.news_compose.common.NoInternetException
+import com.nadharia.news_compose.model.NewsType
 import com.nadharia.news_compose.ui.components.TabScreen
 import com.nadharia.news_compose.viewmodels.NewsFilterViewModel
 import kotlinx.coroutines.launch
@@ -27,14 +33,19 @@ fun TabBarScreen(viewModel: NewsFilterViewModel = hiltViewModel()) {
     val tabs = listOf(TabScreen.Categories, TabScreen.Source)
     val pagerState = rememberPagerState()
     val coroutineScope = rememberCoroutineScope()
-    val newsCategoryList by viewModel.newsTypeItem.collectAsState()
 
+    // Collecting UIState
+    val newsCategoryList: UIState<List<NewsType>> by viewModel.newsTypeItem.collectAsState()
 
+    // Fetch data when the screen is loaded
+    LaunchedEffect(Unit) {
+        viewModel.getNewsType()
+    }
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = "Tab bar demo") },
+                title = { Text(text = "Tab Bar Demo") },
                 navigationIcon = {
                     IconButton(onClick = { /* Handle navigation */ }) {
                         Icon(Icons.Filled.Menu, contentDescription = "Navigation menu")
@@ -56,14 +67,12 @@ fun TabBarScreen(viewModel: NewsFilterViewModel = hiltViewModel()) {
         }
     ) { paddingValues ->
         Column(modifier = Modifier.padding(paddingValues)) {
+            // Tabs UI
             TabRow(
                 selectedTabIndex = pagerState.currentPage,
                 indicator = { tabPositions ->
                     TabRowDefaults.Indicator(
-                        Modifier.pagerTabIndicatorOffset(
-                            pagerState,
-                            tabPositions
-                        )
+                        Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
                     )
                 }
             ) {
@@ -77,18 +86,48 @@ fun TabBarScreen(viewModel: NewsFilterViewModel = hiltViewModel()) {
                 }
             }
 
-            HorizontalPager(
-                state = pagerState, count = tabs.size,
-                verticalAlignment = Alignment.Top,
-                modifier = Modifier.padding(top = 10.dp)
-            ) { page ->
-                when (tabs[page]) {
-                    TabScreen.Categories -> ListTabContent(newsCategoryList) { true }
-                    TabScreen.Source -> ListTabContent(newsCategoryList) { it.isFav }
+            // UIState Handling
+            when (newsCategoryList) {
+                is UIState.Loading -> {
+                    CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
+                }
+                is UIState.Failure -> {
+                    val errorText = if ((newsCategoryList as UIState.Failure).throwable is NoInternetException) {
+                        stringResource(id = R.string.no_internet_available)
+                    } else {
+                        stringResource(id = R.string.something_went_wrong)
+                    }
+                    ShowError(
+                        text = errorText,
+                        retryEnabled = true
+                    ) {
+                        viewModel.getNewsType()
+                    }
+                }
+                is UIState.Success -> {
+                    val data = (newsCategoryList as UIState.Success<List<NewsType>>).data
+                    HorizontalPager(
+                        state = pagerState, count = tabs.size,
+                        verticalAlignment = Alignment.Top,
+                        modifier = Modifier.padding(top = 10.dp)
+                    ) { page ->
+                        when (tabs[page]) {
+                            TabScreen.Categories -> ListTabContent(data) { true }
+                            TabScreen.Source -> ListTabContent(data) { true }
+                        }
+                    }
+                }
+                is UIState.Empty -> {
+                    Text(
+                        text = stringResource(id = R.string.no_data_available),
+                        modifier = Modifier.align(Alignment.CenterHorizontally),
+                        color = Color.Gray
+                    )
                 }
             }
         }
     }
 }
+
 
 
